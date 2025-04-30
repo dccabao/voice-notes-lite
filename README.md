@@ -1,50 +1,47 @@
-# Welcome to your Expo app 👋
+# Voice Notes Lite (React Native / Expo)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This is a simple voice memo app built using **React Native with Expo**. The app allows users to record and playback short voice notes, and persists them locally using AsyncStorage.
 
-## Get started
+---
 
-1. Install dependencies
+## 🛠 Features
 
-   ```bash
-   npm install
-   ```
+- Start and stop voice recording
+- View saved recordings with timestamps
+- Tap to play any saved recording
+- Delete a voice note
+- Persist recordings list using AsyncStorage
+- Custom styled buttons and basic animation
 
-2. Start the app
+---
 
-   ```bash
-    npx expo start
-   ```
+## 🚀 Setup Instructions
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+### 1. Clone the repo
 
 ```bash
-npm run reset-project
+git clone https://github.com/dccabao/voice-notes-lite
+cd voice-notes-lite
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Install dependencies
+npm install
 
-## Learn more
+# or
 
-To learn more about developing your project with Expo, look at the following resources:
+yarn
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+npx expo start
 
-## Join the community
+Then press i to open it on the iOS Simulator, or scan the QR code with Expo Go.
 
-Join our community of developers creating universal apps.
+✅ Requires Xcode if running on iOS Simulator
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+⸻
+
+📌 Notes on My Approach
+• Used expo-av for recording and playback (no native modules required)
+• Audio files are stored temporarily, but their metadata (uri, timestamp) is persisted using AsyncStorage
+• Kept components modular with VoiceNoteItem for clean rendering
+• Added basic UI enhancements like color-coded buttons and fade-in animation
+• Focused on clarity and testability within the 1-hour constraint
