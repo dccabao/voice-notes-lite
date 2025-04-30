@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   TouchableOpacity,
   FlatList,
@@ -9,11 +9,27 @@ import {
 import { Audio } from 'expo-av'
 import VoiceNoteItem from './components/VoiceNoteItem'
 import { formatTime } from './utils/time'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function App() {
   const [recording, setRecording] = useState(null)
   const [recordings, setRecordings] = useState([])
   const [playing, setPlaying] = useState(null)
+
+  useEffect(() => {
+    const loadRecordings = async () => {
+      try {
+        const data = await AsyncStorage.getItem('voiceNotes')
+        if (data) {
+          setRecordings(JSON.parse(data))
+        }
+      } catch (e) {
+        console.error('Failed to load recordings:', e)
+      }
+    }
+
+    loadRecordings()
+  }, [])
 
   const startRecording = async () => {
     const permission = await Audio.requestPermissionsAsync()
@@ -32,11 +48,22 @@ export default function App() {
   }
 
   const stopRecording = async () => {
-    await recording.stopAndUnloadAsync()
-    const uri = recording.getURI()
-    const timestamp = formatTime(new Date())
-    setRecordings((prev) => [...prev, { uri, timestamp }])
-    setRecording(null)
+    try {
+      await recording.stopAndUnloadAsync()
+      const uri = recording.getURI()
+      const timestamp = formatTime(new Date())
+
+      const updatedRecordings = [...recordings, { uri, timestamp }]
+      setRecordings(updatedRecordings)
+      await AsyncStorage.setItem(
+        'voiceNotes',
+        JSON.stringify(updatedRecordings)
+      )
+
+      setRecording(null)
+    } catch (err) {
+      console.error('Failed to stop recording', err)
+    }
   }
 
   const playRecording = async (uri) => {
@@ -58,10 +85,11 @@ export default function App() {
     })
   }
 
-  const deleteRecording = (indexToDelete) => {
-    setRecordings((prev) => prev.filter((_, index) => index !== indexToDelete))
+  const deleteRecording = async (indexToDelete) => {
+    const updated = recordings.filter((_, index) => index !== indexToDelete)
+    setRecordings(updated)
+    await AsyncStorage.setItem('voiceNotes', JSON.stringify(updated))
   }
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Voice Notes</Text>
